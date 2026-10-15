@@ -8,17 +8,15 @@
     The path provided below has to start and end with a slash "/" in order for
     it to work correctly.
 
-    For more details:
-    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
-
-    This is a placeholder for base href that will be replaced by the value of
-    the `--base-href` argument provided to `flutter build`.
+    ⭐ مهم: لا تغيّر السطر ده يدوياً.
+    Flutter هيستبدل $FLUTTER_BASE_HREF تلقائياً وقت البناء.
   -->
-  <base href="/">
+  <base href="$FLUTTER_BASE_HREF">
+
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="Moonstar ERP - نظام إداري كامل">
-  
+
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -28,20 +26,57 @@
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png"/>
 
-  <link rel="apple-touch-icon" href="icons/Icon-192.png"/>="favicon.png"/>
-
   <title>MoonStar</title>
   <link rel="manifest" href="manifest.json">
 </head>
 <body>
   <!--
-    You can customize the "flutter_bootstrap.js" script.
-    This is useful to provide a custom configuration to the Flutter loader
-    or to give the user feedback during the initialization process.
-
-    For more details:
-    * https://docs.flutter.dev/platform-integration/web/initialization
+    ⭐ Spinner تحميل بسيط عشان لو الأبلكيشن أخد وقت
+    هيختفي تلقائياً بعد ما Flutter يشتغل.
   -->
+  <div id="loading" style="
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #6A1B9A 0%, #9C4DCC 100%);
+    font-family: Cairo, sans-serif;
+    color: white;
+    z-index: 9999;
+    transition: opacity 0.3s ease-out;
+  ">
+    <div style="
+      width: 60px;
+      height: 60px;
+      border: 4px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    "></div>
+    <p style="margin-top: 20px; font-size: 18px; font-weight: 600;">
+      جارٍ التحميل...
+    </p>
+  </div>
+
+  <style>
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+
+  <script>
+    // ⭐ نخفي الـ loading لما Flutter يخلّص أول frame
+    window.addEventListener('flutter-first-frame', function () {
+      const el = document.getElementById('loading');
+      if (el) {
+        el.style.opacity = '0';
+        setTimeout(() => el.remove(), 300);
+      }
+    });
+  </script>
+
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>
